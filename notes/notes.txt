@@ -10,3 +10,11 @@ head print the first 10 lines of the file
 shuf generate random premutation
 fold wrap each input line to fit in specified width
 
+
+for loop
+ 
+for x in [list]
+do
+ echo "do sth...."
+done
+
