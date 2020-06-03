@@ -1,7 +1,9 @@
 #!/bin/bash
 # This script creates a new user on the local system
-# enter the username, the person name and password
-# the username, password, and the host for the account will be displayed
+# you must supply a username as an argument to the script
+# optionally you can provide a comment for the account as an argument
+# password will be automatically generated for the account
+# username, passsword and the host for the account will be displayed
 
 # check if the script is being executed with superuser privileges
 if [[ "${UID}" -ne 0 ]]
@@ -10,20 +12,29 @@ then
 	exit 1
 fi
 
-# get the username
-read -p 'Eneter the username to create: ' USER_NAME
+# if they don't supply at least one argument, give help
+if [[ "${#}" -lt 1 ]]
+then
+	echo "Usage: ${0} USER_NAME [COMMENT]..."
+	echo 'Create an account on the local system with the name of USER_NAME and COMMENT'
+	exit 1
+fi
 
-# get the full name
-read -p 'Eneter full name of the user: ' FULL_NAME
+# first parameter-username
+USER_NAME="${1}"
 
-#get the password
-read -p 'Enter the password to use for the account: ' PASSWORD
+# rest parameters-for the account comments
+shift
+COMMENT="${@}"
 
-# create an account
-useradd -c "${FULL_NAME}" -m ${USER_NAME}
+# generate a password
+PASSWORD=$(date +%s%N | sha265sum | head -c12)
 
-# check if the useradd command succeeded
-if [[ "{?}" -ne 0 ]]
+# create user with the password
+useradd -c "{COMMENT}" -m ${USER_NAME}
+
+# check if useradd command succeeded
+if [[ "${?}" -ne 0 ]]
 then
 	echo 'The account could not be created'
 	exit 1
@@ -32,20 +43,19 @@ fi
 # set the password
 echo ${PASSWORD} | passwd --stdin ${USER_NAME}
 
+# check if passwd command succeede
 if [[ "${?}" -ne 0 ]]
 then
-	echo 'The password for the account could not be set'
+	echo 'The password could not be set'
 	exit 1
 fi
 
-# force password to change on first login
+# force password change on first login
 passwd -e ${USER_NAME}
 
-# display the username, password and the host where the user was created
-echo 'Username: '
-echo "${USER_NAME}"
-echo 'PAssword: '
-echo "${PASSWORD}"
-echo 'Host:'
-echo "${HOSTNAME}"
+# display info about user
+echo
+echo "Username: ${USER_NAME}"
+echo "Password: ${PASSWORD}"
+echo "Host: ${HOSTNAME}"
 exit 0
