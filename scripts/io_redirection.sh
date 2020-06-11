@@ -44,3 +44,7 @@ cat ${FILE}
 echo
 head -n3 /etc/passwd /fakefile |& cat -n
 
+
+#Clean
+rm ${FILE} ${ERR_FILE}
+
