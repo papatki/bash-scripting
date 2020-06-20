@@ -30,3 +30,12 @@ backup_file() {
 #execute function
 readonly VERBOSE='true' #readonly -> immutable variable
 backup_file '/etc/passwd'
+
+#make a decision based on the exit status of the function
+if [[ "${?}" -eq '0' ]]
+then
+	log 'File backup succeeded'
+else
+	log 'File backup failed'
+	exit 1
+fi
