@@ -47,6 +47,8 @@ tar -tvf archive.tar
 #extract all files from archive.tar
 tar -xf archive.tar
 
+#Compress 
+gzip <file_name> --> file_name.gz
 
 
 
