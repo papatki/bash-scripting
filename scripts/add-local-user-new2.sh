@@ -29,10 +29,10 @@ shift
 COMMENT="${@}"
 
 # generate a password
-PASSWORD=$(date +%s%N | sha265sum | head -c12)
+PASSWORD=$(date +%s%N | sha256sum | head -c12)
 
 # create user with the password
-useradd -c "{COMMENT}" -m ${USER_NAME} &> /dev/null
+useradd -c "${COMMENT}" -m ${USER_NAME} &> /dev/null
 
 # check if useradd command succeeded
 if [[ "${?}" -ne 0 ]]
